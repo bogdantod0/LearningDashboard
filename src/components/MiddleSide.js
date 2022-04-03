@@ -80,6 +80,7 @@ function MiddleSide() {
               <h1>Planning</h1>
               <a>View All</a>
             </div>
+
             <DatePicker
               label="Pick Date"
               value={value}
