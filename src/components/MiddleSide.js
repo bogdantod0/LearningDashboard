@@ -78,7 +78,7 @@ function MiddleSide() {
           <BottomHeader>
             <div>
               <h1>Planning</h1>
-              <a>View Allasa</a>
+              <a>View All</a>
             </div>
 
             <DatePicker
