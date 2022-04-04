@@ -120,9 +120,17 @@ const Container = styled.div`
   font-family: "Poppins";
   height: 100%;
   width: 100%;
-
   padding: 30px;
-  img {
+  @media (max-width: 820px) {
+    img {
+      height: 150px;
+    }
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    align-items: center;
+    /* background: URL("/images/login/Illustration.jpg"); */
+    padding: 0;
   }
 `;
 const LoginContainer = styled.div`
