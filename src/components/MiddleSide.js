@@ -8,6 +8,7 @@ import { useState } from "react";
 
 function MiddleSide() {
   const [value, setValue] = useState(new Date());
+  const [courseSearchValue, setCourseSearchValue] = useState("");
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Container>
@@ -22,9 +23,15 @@ function MiddleSide() {
               <h1>MyCourses</h1>
               <span>View All</span>
             </div>
+
             <div>
               <img src="/images/search 1.svg" alt="" />
-              <span>Search...</span>
+              <TextField
+                id="standard-search"
+                label="Search"
+                type="search"
+                variant="standard"
+              />
             </div>
           </TopContentHeader>
 
@@ -82,7 +89,9 @@ function MiddleSide() {
             </div>
 
             <DatePicker
-              label="Pick Date"
+              label="Date"
+              openTo="year"
+              views={["year", "month", "day"]}
               value={value}
               onChange={(newValue) => {
                 setValue(newValue);
@@ -181,6 +190,9 @@ const TopContentHeader = styled.div`
   div {
     display: flex;
     align-items: baseline;
+    :last-child {
+      color: rgba(54, 159, 255, 1);
+    }
   }
   h1 {
     font-size: 30px;
@@ -192,7 +204,8 @@ const TopContentHeader = styled.div`
     color: rgba(54, 159, 255, 1);
   }
   img {
-    height: 14px;
+    height: 15px;
+    padding-right: 10px;
   }
   @media (max-width: 760px) {
     flex-direction: column;
@@ -256,11 +269,14 @@ const BottomHeader = styled.div`
   margin-top: 30px;
   display: flex;
   justify-content: space-between;
-
+  align-items: center;
+  height: 100%;
   div {
-    display: flex;
-    align-items: baseline;
     color: rgba(54, 159, 255, 1);
+    :first-child {
+      display: flex;
+      align-items: baseline;
+    }
   }
   h1 {
     font-size: 30px;
