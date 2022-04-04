@@ -48,7 +48,7 @@ function RightSide() {
 
   return (
     <Container>
-      <UserHeader>
+      {/* <UserHeader>
         <IconButton aria-label="Notification">
           <NotificationsNoneOutlinedIcon />
         </IconButton>
@@ -63,7 +63,7 @@ function RightSide() {
             <LongMenu />
           </UserMenuButton>
         </UserMenu>
-      </UserHeader>
+      </UserHeader> */}
 
       <SharedStatistics>
         <h1>Statistics</h1>
@@ -104,7 +104,7 @@ function RightSide() {
         </SharedACtivityHeader>
         <SharedActivityContent>
           <BarChart
-            width={500}
+            width={400}
             height={300}
             data={chartData}
             margin={{ top: 0, right: 0, left: 0, bottom: 5 }}

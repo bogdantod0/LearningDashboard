@@ -3,10 +3,11 @@ import MiddleSide from "./components/MiddleSide";
 import RightSide from "./components/RightSide";
 import styled from "styled-components";
 import React, { Component } from "react";
-
+import Header from "./components/Header";
 function App() {
   return (
     <Container>
+      <Header />
       <Layout>
         <LeftSide />
         <MiddleSide />
@@ -28,7 +29,7 @@ const Layout = styled.div`
   grid-template-areas: "leftside middle rightside";
   grid-template-columns: minmax(180px, 5fr) minmax(0, 15fr) minmax(0, 10fr);
 
-  @media (max-width: 768px) {
+  @media (max-width: 760px) {
     display: flex;
     flex-direction: column;
     padding: 0 5px;

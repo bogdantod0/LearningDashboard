@@ -11,11 +11,11 @@ function MiddleSide() {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Container>
-        <Header>
+        {/* <Header>
           <span>
             Hello <b>USER</b>, welcome back!
           </span>
-        </Header>
+        </Header> */}
         <TopContent>
           <TopContentHeader>
             <div>
@@ -155,6 +155,9 @@ const Container = styled.div`
   height: 100%;
   padding: 0 20px;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
+  @media (max-width: 760px) {
+    border: none;
+  }
 `;
 const Header = styled.div`
   font-size: 18px;
@@ -190,6 +193,11 @@ const TopContentHeader = styled.div`
   }
   img {
     height: 14px;
+  }
+  @media (max-width: 760px) {
+    flex-direction: column;
+
+    row-gap: 10px;
   }
 `;
 const CardContainer = styled.div`
@@ -262,6 +270,10 @@ const BottomHeader = styled.div`
   }
   h2 {
     text-align: right;
+  }
+  @media (max-width: 760px) {
+    flex-direction: column;
+    row-gap: 10px;
   }
 `;
 const PlanCard = styled.div`

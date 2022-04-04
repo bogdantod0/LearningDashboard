@@ -4,12 +4,12 @@ import styled from "styled-components";
 function LeftSide() {
   return (
     <Container>
-      <Title>
+      {/* <Title>
         <img src="/images/title-logo.svg" alt="" />
         <span>
           SE<span>•</span>T
         </span>
-      </Title>
+      </Title> */}
       <Menu>
         <button>
           <img src="/images/Iconly/Light-outline/Home-1.svg" alt="" />
@@ -61,12 +61,14 @@ export default LeftSide;
 
 const Container = styled.div`
   grid-area: leftside;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   border-right: 1px solid rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  @media (max-width: 760px) {
+    border: none;
+  }
 `;
 const Title = styled.div`
   align-items: center;
@@ -86,6 +88,7 @@ const Menu = styled.div`
   flex-direction: column;
   color: white;
   padding-top: 20px;
+
   button {
     background-color: transparent;
     outline: none;
@@ -106,7 +109,7 @@ const Menu = styled.div`
     :hover {
       color: rgba(0, 0, 0, 0.5);
     }
-    @media (min-width: 760px) {
+    @media (min-width: 750px) {
       :last-child {
         display: none;
       }
@@ -115,12 +118,16 @@ const Menu = styled.div`
 
   @media (max-width: 750px) {
     flex-direction: row;
-
     button {
       flex-direction: column;
+      height: 60px;
+      width: 60px;
+      font-size: 12px;
     }
     img {
       padding-left: 20px;
+
+      max-width: 44px;
     }
   }
 `;
