@@ -271,6 +271,7 @@ const BottomHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   height: 100%;
+
   div {
     color: rgba(54, 159, 255, 1);
     :first-child {
