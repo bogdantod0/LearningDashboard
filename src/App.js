@@ -23,7 +23,6 @@ function App(props) {
 
         <Routes>
           <Route exact path="home" element={<Home />}></Route>
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </Container>

@@ -33,9 +33,21 @@ function Header(props) {
           <NotificationsNoneOutlinedIcon />
         </IconButton>
         <User>
-          <UserMenuAvatar />
+          {props.user && props.user.photoURL ? (
+            <UserMenuAvatar
+              style={{ background: `url(${props.user.photoURL}) ` }}
+            />
+          ) : (
+            <UserMenuAvatar />
+          )}
+
           <div>
-            <h1>Username</h1>
+            {props.user && props.user.displayName ? (
+              <h1>{props.user.displayName}</h1>
+            ) : (
+              <h1>USER</h1>
+            )}
+
             <h6>User Plan</h6>
           </div>
           <UserMenuButton>
@@ -119,6 +131,7 @@ const UserMenuAvatar = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100%;
+  border-radius: 50%;
   height: 30px;
   width: 30px;
   margin: 5px;

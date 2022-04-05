@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -11,18 +11,21 @@ import { useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { styled as mstyled } from "@mui/material/styles";
-import { singInGoogleApi } from "../Redux/actions";
+import { singInAPI, singInGoogleApi } from "../Redux/actions";
 import { connect } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 function LoginPage(props) {
+  const [emailLogin, setEmailLogin] = useState("");
+  const [passwordLogin, setPasswordLogin] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    // setEmailLogin(data.get("email"));
+    // setPasswordLogin(data.get("password"));
+
+    props.signInUP(emailLogin, passwordLogin);
   };
 
   return (
@@ -79,6 +82,7 @@ function LoginPage(props) {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={(e) => setEmailLogin(e.target.value)}
             />
             <TextField
               margin="normal"
@@ -89,6 +93,7 @@ function LoginPage(props) {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={(e) => setPasswordLogin(e.target.value)}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -128,6 +133,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => ({
   signIn: () => dispatch(singInGoogleApi()),
+  signInUP: (user, password) => dispatch(singInAPI(user, password)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
 

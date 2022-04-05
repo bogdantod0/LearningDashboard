@@ -1,5 +1,10 @@
 import React from "react";
-import { signInWithPopup, GoogleAuthProvider, signOut } from "firebase/auth";
+import {
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth, provider } from "../../firebase";
 import { SET_USER } from "./actionType";
 
@@ -34,6 +39,22 @@ export const singInGoogleApi = () => {
   };
 };
 
+export const singInAPI = (email, password) => {
+  return (dispatch) => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in
+        const user = userCredential.user;
+        // console.log("USER RESULT:", user);
+        dispatch(setUser(user));
+        // ...
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+      });
+  };
+};
 export function getUserAuth() {
   return (dispatch) => {
     auth.onAuthStateChanged(async (user) => {
