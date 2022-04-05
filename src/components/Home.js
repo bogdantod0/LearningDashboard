@@ -6,7 +6,7 @@ import RightSide from "./RightSide";
 import Header from "./Header";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { connect } from "react-redux";
-import LoginPage from "../components/LoginPage";
+
 function Home(props) {
   return (
     <Container>

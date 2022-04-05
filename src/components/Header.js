@@ -17,25 +17,25 @@ function Header(props) {
       </Title>
 
       <Greeting>
-        <span>
-          Hello <b>{props.user.displayName}</b>, welcome back!
-        </span>
+        {props.user && props.user.displayName ? (
+          <span>
+            Hello <b>{props.user.displayName}</b>, welcome back!
+          </span>
+        ) : (
+          <span>
+            Hello <b>USER</b>, welcome back!
+          </span>
+        )}
       </Greeting>
 
       <UserHeader>
-        <IconButton
-          aria-label="Notification"
-          onClick={() => {
-            props.signOut();
-          }}
-        >
+        <IconButton aria-label="Notification" onClick={() => props.signOut()}>
           <NotificationsNoneOutlinedIcon />
         </IconButton>
         <User>
           <UserMenuAvatar />
           <div>
-            <h1>{props.user.displayName}</h1>
-
+            <h1>Username</h1>
             <h6>User Plan</h6>
           </div>
           <UserMenuButton>

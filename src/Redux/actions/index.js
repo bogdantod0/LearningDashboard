@@ -18,7 +18,6 @@ export const singInGoogleApi = () => {
         // The signed-in user info.
         const user = result.user;
         console.log("USER RESULT:", user);
-        console.log(" RESULT:", result);
         // ...
         dispatch(setUser(user));
       })
