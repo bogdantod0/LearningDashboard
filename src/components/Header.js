@@ -26,7 +26,7 @@ function Header(props) {
         <IconButton
           aria-label="Notification"
           onClick={() => {
-            signOut();
+            props.signOut();
           }}
         >
           <NotificationsNoneOutlinedIcon />
@@ -35,6 +35,7 @@ function Header(props) {
           <UserMenuAvatar />
           <div>
             <h1>{props.user.displayName}</h1>
+
             <h6>User Plan</h6>
           </div>
           <UserMenuButton>
