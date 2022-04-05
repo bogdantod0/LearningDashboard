@@ -2,23 +2,41 @@ import styled from "styled-components";
 import React, { Component } from "react";
 import Header from "./components/Header";
 import Home from "./components/Home";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
-function App() {
+import { connect } from "react-redux";
+import { useEffect } from "react";
+import { getUserAuth } from "./Redux/actions";
+import NotFound from "./components/NotFound";
+
+function App(props) {
+  useEffect(() => {
+    props.getUserAuth();
+  }, []);
+
   return (
     <Container>
-      <Routes>
-        <Route exact path="/" element={<LoginPage />}></Route>
-      </Routes>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/" element={<LoginPage />}></Route>
+        </Routes>
 
-      <Routes>
-        <Route path="/home" element={<Home />}></Route>
-      </Routes>
+        <Routes>
+          <Route exact path="home" element={<Home />}></Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
     </Container>
   );
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {};
+};
+const mapDispatchToProps = (dispatch) => ({
+  getUserAuth: () => dispatch(getUserAuth()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 const Container = styled.div`
   margin: 0;

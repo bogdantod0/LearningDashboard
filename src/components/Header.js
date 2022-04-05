@@ -3,7 +3,10 @@ import styled from "styled-components";
 import IconButton from "@mui/material/IconButton";
 import LongMenu from "./DotMenu";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-function Header() {
+import { connect } from "react-redux";
+import { signOutGoogleApi } from "../Redux/actions";
+import { signOut } from "firebase/auth";
+function Header(props) {
   return (
     <HeaderContainer>
       <Title>
@@ -15,18 +18,23 @@ function Header() {
 
       <Greeting>
         <span>
-          Hello <b>USER</b>, welcome back!
+          Hello <b>{props.user.displayName}</b>, welcome back!
         </span>
       </Greeting>
 
       <UserHeader>
-        <IconButton aria-label="Notification">
+        <IconButton
+          aria-label="Notification"
+          onClick={() => {
+            signOut();
+          }}
+        >
           <NotificationsNoneOutlinedIcon />
         </IconButton>
         <User>
           <UserMenuAvatar />
           <div>
-            <h1>UserName</h1>
+            <h1>{props.user.displayName}</h1>
             <h6>User Plan</h6>
           </div>
           <UserMenuButton>
@@ -38,7 +46,15 @@ function Header() {
   );
 }
 
-export default Header;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
+const mapDispatchToProps = (dispatch) => ({
+  signOut: () => dispatch(signOutGoogleApi()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Header);
 const HeaderContainer = styled.div`
   /* background-color: rgba(0, 0, 0, 0.1); */
   width: 100%;
@@ -77,7 +93,7 @@ const Greeting = styled.div`
   color: rgba(54, 159, 255, 1);
   line-height: 2;
   letter-spacing: 1.5px;
-  width: 100%;
+
   @media (max-width: 760px) {
     display: none;
   }
@@ -88,6 +104,7 @@ const User = styled.div`
   display: flex;
   align-items: center;
   line-height: 3px;
+  width: 100%;
   h1 {
     font-size: 14px;
   }

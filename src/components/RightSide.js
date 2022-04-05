@@ -14,7 +14,7 @@ import {
   Bar,
   ResponsiveContainer,
 } from "recharts";
-function RightSide() {
+function RightSide(props) {
   const chartData = [
     {
       name: "Mo",

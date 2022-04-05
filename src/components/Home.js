@@ -4,23 +4,38 @@ import LeftSide from "./LeftSide";
 import MiddleSide from "./MiddleSide";
 import RightSide from "./RightSide";
 import Header from "./Header";
-function Home() {
+import { Routes, Route, Navigate } from "react-router-dom";
+import { connect } from "react-redux";
+function Home(props) {
   return (
-    <>
+    <Container>
+      {!props.user && (
+        <Routes>
+          <Route path="*" element={<Navigate replace to="/" />} />
+        </Routes>
+      )}
+
       <Header />
       <Layout>
         <LeftSide />
         <MiddleSide />
         <RightSide />
       </Layout>
-    </>
+    </Container>
   );
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
+export default connect(mapStateToProps)(Home);
+
 const Container = styled.div`
   margin: 0;
   max-width: 100%;
+  height: 100%;
 `;
 
 const Layout = styled.div`

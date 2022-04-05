@@ -11,7 +11,9 @@ import { useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { styled as mstyled } from "@mui/material/styles";
-import singInGoogleApi from "../actions";
+import { singInGoogleApi } from "../Redux/actions";
+import { connect } from "react-redux";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 function LoginPage(props) {
   const handleSubmit = (event) => {
@@ -25,6 +27,12 @@ function LoginPage(props) {
 
   return (
     <Container>
+      {props.user && (
+        <Routes>
+          <Route path="/" element={<Navigate replace to="/home" />} />
+        </Routes>
+      )}
+
       <div>
         <img src="/images/login/Illustration.jpg" alt="" />
       </div>
@@ -38,7 +46,7 @@ function LoginPage(props) {
             <GButton
               type="button"
               startIcon={<GoogleIcon style={{ fontSize: 40 }} />}
-              onClick={singInGoogleApi}
+              onClick={() => props.signIn()}
             >
               Login with Google
             </GButton>
@@ -113,7 +121,16 @@ function LoginPage(props) {
   );
 }
 
-export default LoginPage;
+const mapStateToProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
+const mapDispatchToProps = (dispatch) => ({
+  signIn: () => dispatch(singInGoogleApi()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+
 const Container = styled.div`
   display: flex;
   justify-content: space-around;

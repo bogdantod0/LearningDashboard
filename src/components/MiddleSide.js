@@ -6,7 +6,7 @@ import DatePicker from "@mui/lab/DatePicker";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 
-function MiddleSide() {
+function MiddleSide(props) {
   const [value, setValue] = useState(new Date());
   const [courseSearchValue, setCourseSearchValue] = useState("");
   return (

@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-function LeftSide() {
+function LeftSide(props) {
   return (
     <Container>
       {/* <Title>
