@@ -3,16 +3,26 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
-const options = ["None", "Atria"];
+import { connect } from "react-redux";
+import { signOutGoogleApi } from "../Redux/actions";
 
 const ITEM_HEIGHT = 48;
+const options = ["None", "NotWorkin", "Element", "SignOut"];
 
-export default function LongMenu() {
+function LongMenu(props) {
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+  const menuItemClick = (event, selected) => {
+    if (selected === options.length - 1) {
+      props.signOut();
+      setAnchorEl(null);
+    }
+
+    setAnchorEl(null);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -45,11 +55,11 @@ export default function LongMenu() {
           },
         }}
       >
-        {options.map((option) => (
+        {options.map((option, index) => (
           <MenuItem
             key={option}
             selected={option === "None"}
-            onClick={handleClose}
+            onClick={(event) => menuItemClick(event, index)}
           >
             {option}
           </MenuItem>
@@ -58,3 +68,13 @@ export default function LongMenu() {
     </div>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
+const mapDispatchToProps = (dispatch) => ({
+  signOut: () => dispatch(signOutGoogleApi()),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(LongMenu);

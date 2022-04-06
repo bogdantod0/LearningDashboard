@@ -11,21 +11,44 @@ import { useState } from "react";
 import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { styled as mstyled } from "@mui/material/styles";
-import { singInAPI, singInGoogleApi } from "../Redux/actions";
+import RegisterPage from "./RegisterPage";
+import {
+  signInAPI,
+  signInGoogleApi,
+  signInFacebookApi,
+} from "../Redux/actions";
 import { connect } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 function LoginPage(props) {
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
+  const [showRegister, setShowRegister] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // setEmailLogin(data.get("email"));
     // setPasswordLogin(data.get("password"));
-
     props.signInUP(emailLogin, passwordLogin);
+  };
+
+  const handleShowRegister = (e) => {
+    e.preventDefault();
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    switch (showRegister) {
+      case true:
+        setShowRegister(false);
+        break;
+      case false:
+        setShowRegister(true);
+        break;
+      default:
+        setShowRegister(false);
+        break;
+    }
   };
 
   return (
@@ -58,6 +81,7 @@ function LoginPage(props) {
             <FbButton
               type="button"
               startIcon={<FacebookIcon style={{ fontSize: 40 }} />}
+              onClick={() => props.signInFacebook()}
             >
               Login with Facebook
             </FbButton>
@@ -114,7 +138,11 @@ function LoginPage(props) {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link
+                  href="#"
+                  variant="body2"
+                  onClick={(e) => handleShowRegister(e)}
+                >
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
@@ -122,6 +150,10 @@ function LoginPage(props) {
           </Box>
         </ConventionalLogin>
       </LoginContainer>
+      <RegisterPage
+        showRegister={showRegister}
+        handleClick={handleShowRegister}
+      />
     </Container>
   );
 }
@@ -132,8 +164,9 @@ const mapStateToProps = (state) => {
   };
 };
 const mapDispatchToProps = (dispatch) => ({
-  signIn: () => dispatch(singInGoogleApi()),
-  signInUP: (user, password) => dispatch(singInAPI(user, password)),
+  signIn: () => dispatch(signInGoogleApi()),
+  signInFacebook: () => dispatch(signInFacebookApi()),
+  signInUP: (user, password) => dispatch(signInAPI(user, password)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
 
@@ -152,7 +185,6 @@ const Container = styled.div`
     flex-direction: column;
     background: transparent;
     align-items: center;
-    /* background: URL("/images/login/Illustration.jpg"); */
     padding: 0;
   }
 `;

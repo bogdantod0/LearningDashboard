@@ -2,10 +2,12 @@ import React from "react";
 import {
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
   signOut,
   signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { auth, provider } from "../../firebase";
+import { auth, provider, provider2 } from "../../firebase";
 import { SET_USER } from "./actionType";
 
 export const setUser = (payload) => ({
@@ -13,7 +15,7 @@ export const setUser = (payload) => ({
   user: payload,
 });
 
-export const singInGoogleApi = () => {
+export const signInGoogleApi = () => {
   return (dispatch) => {
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -38,8 +40,35 @@ export const singInGoogleApi = () => {
       });
   };
 };
+export const signInFacebookApi = () => {
+  return (dispatch) => {
+    signInWithPopup(auth, provider2)
+      .then((result) => {
+        // The signed-in user info.
+        const user = result.user;
 
-export const singInAPI = (email, password) => {
+        // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+        const credential = FacebookAuthProvider.credentialFromResult(result);
+        const accessToken = credential.accessToken;
+        dispatch(setUser(user));
+        console.log("USER:", user);
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.email;
+        // The AuthCredential type that was used.
+        const credential = FacebookAuthProvider.credentialFromError(error);
+
+        // ...
+      });
+  };
+};
+
+export const signInAPI = (email, password) => {
   return (dispatch) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
@@ -65,6 +94,21 @@ export function getUserAuth() {
     });
   };
 }
+
+export const registerUser = (email, passwd) => {
+  createUserWithEmailAndPassword(auth, email, passwd)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log("USER", user);
+      // ...
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
+};
 
 export const signOutGoogleApi = () => {
   return (dispatch) => {

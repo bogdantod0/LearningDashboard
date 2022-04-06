@@ -29,9 +29,6 @@ function Header(props) {
       </Greeting>
 
       <UserHeader>
-        <IconButton aria-label="Notification" onClick={() => props.signOut()}>
-          <NotificationsNoneOutlinedIcon />
-        </IconButton>
         <User>
           {props.user && props.user.photoURL ? (
             <UserMenuAvatar
@@ -69,7 +66,6 @@ const mapDispatchToProps = (dispatch) => ({
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
 const HeaderContainer = styled.div`
-  /* background-color: rgba(0, 0, 0, 0.1); */
   width: 100%;
   height: 50px;
   display: flex;
@@ -141,5 +137,4 @@ const UserHeader = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  /* width: 100%; */
 `;

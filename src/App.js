@@ -6,12 +6,13 @@ import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import { connect } from "react-redux";
 import { useEffect } from "react";
-import { getUserAuth } from "./Redux/actions";
+import { getUserAuth, fbLoginStatus } from "./Redux/actions";
 import NotFound from "./components/NotFound";
 
 function App(props) {
   useEffect(() => {
     props.getUserAuth();
+    // props.fbLoginStatus();
   }, []);
 
   return (
