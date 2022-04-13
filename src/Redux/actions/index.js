@@ -6,6 +6,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth, provider, provider2 } from "../../firebase";
 import { SET_USER } from "./actionType";
@@ -15,6 +16,7 @@ export const setUser = (payload) => ({
   user: payload,
 });
 
+//////////////////////USER/////////////////////
 export const signInGoogleApi = () => {
   return (dispatch) => {
     signInWithPopup(auth, provider)
@@ -110,6 +112,18 @@ export const registerUser = (email, passwd) => {
     });
 };
 
+export const resetPassword = (email) => {
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      // Password reset email sent!
+      // ..
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      // ..
+    });
+};
 export const signOutGoogleApi = () => {
   return (dispatch) => {
     signOut(auth)
@@ -121,3 +135,4 @@ export const signOutGoogleApi = () => {
       });
   };
 };
+////////////////////////////////////////////

@@ -83,7 +83,7 @@ const RegisterPage = (props) => {
               <button
                 class="w-100 btn btn-lg btn-primary mt-1"
                 type="submit"
-                onClick={() => registerUser(email, password)}
+                onClick={() => props.registerUser(email, password)}
               >
                 Register
               </button>

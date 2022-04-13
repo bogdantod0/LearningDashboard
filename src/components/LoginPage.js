@@ -12,10 +12,12 @@ import GoogleIcon from "@mui/icons-material/Google";
 import FacebookIcon from "@mui/icons-material/Facebook";
 import { styled as mstyled } from "@mui/material/styles";
 import RegisterPage from "./RegisterPage";
+import Resetpage from "./Resetpage";
 import {
   signInAPI,
   signInGoogleApi,
   signInFacebookApi,
+  resetPassword,
 } from "../Redux/actions";
 import { connect } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";
@@ -24,6 +26,7 @@ function LoginPage(props) {
   const [emailLogin, setEmailLogin] = useState("");
   const [passwordLogin, setPasswordLogin] = useState("");
   const [showRegister, setShowRegister] = useState(false);
+  const [showFgPassword, setShowFgPassword] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,6 +50,23 @@ function LoginPage(props) {
         break;
       default:
         setShowRegister(false);
+        break;
+    }
+  };
+  const handleShowFgPassword = (e) => {
+    e.preventDefault();
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    switch (showFgPassword) {
+      case true:
+        setShowFgPassword(false);
+        break;
+      case false:
+        setShowFgPassword(true);
+        break;
+      default:
+        setShowFgPassword(false);
         break;
     }
   };
@@ -133,7 +153,13 @@ function LoginPage(props) {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <Link
+                  href="#"
+                  variant="body2"
+                  onClick={(e) => {
+                    handleShowFgPassword(e);
+                  }}
+                >
                   Forgot password?
                 </Link>
               </Grid>
@@ -153,6 +179,10 @@ function LoginPage(props) {
       <RegisterPage
         showRegister={showRegister}
         handleClick={handleShowRegister}
+      />
+      <Resetpage
+        showReset={showFgPassword}
+        handleClick={handleShowFgPassword}
       />
     </Container>
   );

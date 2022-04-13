@@ -1,13 +1,11 @@
 import styled from "styled-components";
-import React, { Component } from "react";
-import Header from "./components/Header";
+import React from "react";
 import Home from "./components/Home";
-import { Routes, Route, Navigate, BrowserRouter } from "react-router-dom";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import LoginPage from "./components/LoginPage";
 import { connect } from "react-redux";
 import { useEffect } from "react";
-import { getUserAuth, fbLoginStatus } from "./Redux/actions";
-import NotFound from "./components/NotFound";
+import { getUserAuth } from "./Redux/actions";
 
 function App(props) {
   useEffect(() => {

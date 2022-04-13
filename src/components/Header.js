@@ -1,11 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-import IconButton from "@mui/material/IconButton";
 import LongMenu from "./DotMenu";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import { connect } from "react-redux";
 import { signOutGoogleApi } from "../Redux/actions";
-import { signOut } from "firebase/auth";
+
 function Header(props) {
   return (
     <HeaderContainer>

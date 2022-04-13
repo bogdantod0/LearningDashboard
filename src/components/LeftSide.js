@@ -1,40 +1,64 @@
 import React from "react";
 import styled from "styled-components";
+import { useState } from "react";
+import MessagePage from "./Messages/MessagePage";
+import { connect } from "react-redux";
 
 function LeftSide(props) {
+  const [showMessages, setShowMessages] = useState(false);
+
+  const handleShowMessages = (e) => {
+    e.preventDefault();
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    switch (showMessages) {
+      case true:
+        setShowMessages(false);
+        break;
+      case false:
+        setShowMessages(true);
+        break;
+      default:
+        setShowMessages(false);
+        break;
+    }
+  };
+
   return (
     <Container>
-      {/* <Title>
-        <img src="/images/title-logo.svg" alt="" />
-        <span>
-          SE<span>•</span>T
-        </span>
-      </Title> */}
+      {props.user && (
+        <MessagePage
+          showMessagePage={showMessages}
+          handleClick={handleShowMessages}
+        />
+      )}
+
       <Menu>
         <button>
           <img src="/images/Iconly/Light-outline/Home-1.svg" alt="" />
-          <a> Overwiew </a>
+          Overwiew
         </button>
         <button>
           <img src="/images/Iconly/Light-outline/Category.svg" alt="" />
-          <a> Course </a>
+          Course
         </button>
         <button>
           <img src="/images/Iconly/Light-outline/Folder.svg" alt="" />
-          <a> Resources </a>
+          Resources
         </button>
-        <button>
+        <button onClick={(e) => handleShowMessages(e)}>
           <img src="/images/Iconly/Light-outline/Chat.svg" alt="" />
-          <a> Messages </a>
+          Messages
         </button>
         <button>
           <img src="/images/Iconly/Light-outline/Setting.svg" alt="" />
-          <a> Setting </a>
+          Setting
         </button>
 
         <button className="upButtonSmallScreen">
           <img src="/images/Component 1.svg" alt="" />
-          <a> Upgrade </a>
+          Upgrade
         </button>
       </Menu>
 
@@ -56,8 +80,13 @@ function LeftSide(props) {
     </Container>
   );
 }
+const mapStateToProps = (state) => {
+  return {
+    user: state.userState.user,
+  };
+};
 
-export default LeftSide;
+export default connect(mapStateToProps)(LeftSide);
 
 const Container = styled.div`
   grid-area: leftside;
