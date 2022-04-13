@@ -26,23 +26,13 @@ const MessagePage = (props) => {
     //real time update
 
     onSnapshot(colRef, (snapshot) => {
+      setMessages([]);
       snapshot.docs.forEach((doc) => {
         setMessages((prev) => [...prev, doc.data()]);
         console.log("onsnapshot", doc.data());
       });
     });
   }, []);
-
-  // async function getDbMessages() {
-  //   const querySnapshot = await getDocs(collection(db, "messages"));
-  //   querySnapshot.forEach((doc) => {
-  //     // doc.data() is never undefined for query doc snapshots
-  //     console.log(doc.id, " => ", doc.data());
-
-  //     // setMessages(...document.data);
-  //   });
-  //   // console.log(messages);
-  // }
 
   async function setDbMessage() {
     await addDoc(collection(db, "messages"), {
