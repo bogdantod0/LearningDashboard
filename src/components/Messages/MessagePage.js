@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Message from "./Message";
 import { db } from "../../firebase";
@@ -52,6 +52,7 @@ const MessagePage = (props) => {
     setDbMessage(message);
     setMessage("");
   };
+
   return (
     <>
       {props.showMessagePage && (
@@ -71,9 +72,11 @@ const MessagePage = (props) => {
           <Channel>
             <TopChat>
               {messages &&
-                messages.map((messages) => (
-                  <Message key={messages.id} data={messages} />
-                ))}
+                messages
+                  .sort((a, b) => a["createdAt"] - b["createdAt"])
+                  .map((messages) => (
+                    <Message key={messages.id} data={messages} />
+                  ))}
             </TopChat>
             <BottomChat>
               <TextField
@@ -87,6 +90,11 @@ const MessagePage = (props) => {
                 autoFocus
                 value={message}
                 onChange={(e) => handleTextChange(e)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSendButton(e);
+                  }
+                }}
               />
               <Button
                 variant="text"
@@ -154,6 +162,8 @@ const TopChat = styled.div`
   width: 100%;
   overflow: auto;
   row-gap: 10px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: auto;
 `;
 const BottomChat = styled.div`
   display: flex;
