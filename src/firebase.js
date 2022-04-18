@@ -3,6 +3,7 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { GoogleAuthProvider, FacebookAuthProvider } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
+import { getStorage } from "firebase/storage";
 // TODO: Replace the following with your app's Firebase project configuration
 
 const firebaseConfig = {
@@ -16,11 +17,11 @@ const firebaseConfig = {
   appId: "1:1014486114904:web:72321b8555be689872e02d",
   measurementId: "G-ZPZLN46GSM",
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const analytics = getAnalytics(app);
 const provider2 = new FacebookAuthProvider();
-export { db, auth, provider, provider2 };
+const storage = getStorage(app);
+export { db, auth, provider, provider2, storage };

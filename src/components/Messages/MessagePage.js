@@ -133,6 +133,7 @@ const Container = styled.div`
   box-shadow: -1px 3px 21px 1px rgba(0, 0, 0, 0.25);
   -webkit-box-shadow: -1px 3px 21px 1px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: -1px 3px 21px 1px rgba(0, 0, 0, 0.25);
+  min-height: 400px;
 
   button {
     background-color: transparent;
@@ -144,7 +145,7 @@ const Container = styled.div`
     padding: 5px;
   }
   @media (max-width: 760px) {
-    max-width: fit-content;
+    width: 100%;
   }
 `;
 

@@ -3,10 +3,11 @@ import styled from "styled-components";
 import { useState } from "react";
 import MessagePage from "./Messages/MessagePage";
 import { connect } from "react-redux";
+import UploaderPage from "./Uploader/UploaderPage";
 
 function LeftSide(props) {
   const [showMessages, setShowMessages] = useState(false);
-
+  const [showUploaderPage, setShowUploaderPage] = useState(true);
   const handleShowMessages = (e) => {
     e.preventDefault();
     if (e.target !== e.currentTarget) {
@@ -25,14 +26,49 @@ function LeftSide(props) {
     }
   };
 
+  const handleShowUploaderPage = (e) => {
+    e.preventDefault();
+    if (e.target !== e.currentTarget) {
+      return;
+    }
+    switch (showUploaderPage) {
+      case true:
+        setShowUploaderPage(false);
+        break;
+      case false:
+        setShowUploaderPage(true);
+        break;
+      default:
+        setShowUploaderPage(false);
+        break;
+    }
+  };
+
   return (
     <Container>
       {props.user && (
-        <MessagePage
-          showMessagePage={showMessages}
-          handleClick={handleShowMessages}
-        />
+        <div
+          style={{
+            minWidth: "900px",
+          }}
+        >
+          <MessagePage
+            showMessagePage={showMessages}
+            handleClick={handleShowMessages}
+          />
+          <UploaderPage
+            showUploaderPage={showUploaderPage}
+            handleClick={handleShowUploaderPage}
+          />
+        </div>
       )}
+
+      {/* {props.user && (
+         <UploaderPage
+         showUploaderPage={showUploaderPage}
+         handleClick={handleShowUploaderPage}
+       />
+      )} */}
 
       <Menu>
         <button>
@@ -43,7 +79,7 @@ function LeftSide(props) {
           <img src="/images/Iconly/Light-outline/Category.svg" alt="" />
           Course
         </button>
-        <button>
+        <button onClick={(e) => handleShowUploaderPage(e)}>
           <img src="/images/Iconly/Light-outline/Folder.svg" alt="" />
           Resources
         </button>
