@@ -29,7 +29,6 @@ const MessagePage = (props) => {
       setMessages([]);
       snapshot.docs.forEach((doc) => {
         setMessages((prev) => [...prev, doc.data()]);
-        console.log("onsnapshot", doc.data());
       });
     });
   }, []);

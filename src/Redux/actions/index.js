@@ -26,7 +26,7 @@ export const signInGoogleApi = () => {
         const token = credential.accessToken;
         // The signed-in user info.
         const user = result.user;
-        console.log("USER RESULT:", user);
+
         // ...
         dispatch(setUser(user));
       })
@@ -53,7 +53,7 @@ export const signInFacebookApi = () => {
         const credential = FacebookAuthProvider.credentialFromResult(result);
         const accessToken = credential.accessToken;
         dispatch(setUser(user));
-        console.log("USER:", user);
+
         // ...
       })
       .catch((error) => {
@@ -76,7 +76,7 @@ export const signInAPI = (email, password) => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        // console.log("USER RESULT:", user);
+
         dispatch(setUser(user));
         // ...
       })
@@ -91,7 +91,6 @@ export function getUserAuth() {
     auth.onAuthStateChanged(async (user) => {
       if (user) {
         dispatch(setUser(user));
-        console.log("AUTH:", auth);
       }
     });
   };
@@ -102,7 +101,7 @@ export const registerUser = (email, passwd) => {
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
-      console.log("USER", user);
+
       // ...
     })
     .catch((error) => {
