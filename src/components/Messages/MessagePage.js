@@ -2,16 +2,7 @@ import React, { Component, useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import Message from "./Message";
 import { db } from "../../firebase";
-import {
-  collection,
-  doc,
-  getDocs,
-  onSnapshot,
-  Timestamp,
-  addDoc,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { collection, onSnapshot, Timestamp, addDoc } from "firebase/firestore";
 import { connect } from "react-redux";
 import { Button, TextField } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";

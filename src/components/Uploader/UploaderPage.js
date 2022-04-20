@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useState, useRef } from "react";
 import { storage } from "../../firebase";
+import { saveAs } from "file-saver";
 import {
   ref,
   uploadBytes,
@@ -11,27 +12,51 @@ import {
   getBytes,
 } from "firebase/storage";
 import { connect } from "react-redux";
-///
+///IMPORTS///
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import UploadFileIcon from "@mui/icons-material/UploadFile";
-////
+import CircularProgress from "@mui/material/CircularProgress";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+////MUI IMPORTS////
 import ListItem from "./ListItem";
-///
+import { style } from "@mui/material/node_modules/@mui/system";
+///COMPONENTS IMPORTS///
+
 const UploaderPage = (props) => {
   const [fileUpload, setFileUpload] = useState(null);
   const [value, setValue] = useState("1");
   const inputFileref = useRef(null);
   const listRef = ref(storage, `${props.user.displayName}/files`);
   const [storageItems, setStorageItems] = useState([]);
+  const [showAllStorage, setShowAllStorage] = useState(false);
+  const [downloadUrl, setDownloadUrl] = useState(null);
+  const [showSpinner, setShowSpinner] = useState(false);
+
+  ///
+  const [open, setOpen] = useState(false);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
   ////
 
-  // useEffect(() => {
-  //   listStorageItems();
-  // }, []);
+  const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+  });
+  ////
+  var FileSaver = require("file-saver");
+  useEffect(() => {
+    listStorageItems();
+  }, []);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -48,8 +73,14 @@ const UploaderPage = (props) => {
       storage,
       `${props.user.displayName}/files/${fileUpload.name}`
     );
+    setShowSpinner(true);
     uploadBytes(fileRef, fileUpload).then(() => {
-      alert("file uploaded");
+      getMetadata(fileRef).then((metadata) => {
+        setStorageItems((prev) => [...prev, metadata]);
+      });
+      // alert("file uploaded");
+      setShowSpinner(false);
+      setOpen(true);
     });
     setFileUpload(null);
   };
@@ -57,15 +88,11 @@ const UploaderPage = (props) => {
   const listStorageItems = () => {
     listAll(listRef)
       .then((res) => {
-        res.prefixes.forEach((folderRef) => {
-          // All the prefixes under listRef.
-          // You may call listAll() recursively on them.
-        });
         res.items.forEach((itemRef) => {
           getMetadata(
             ref(storage, `${props.user.displayName}/files/${itemRef.name}`)
           ).then((metadata) => {
-            console.log("CONSOLE ITEM:", itemRef, "metadata:", metadata);
+            // console.log("CONSOLE ITEM:", itemRef, "metadata:", metadata);
             setStorageItems((prev) => [...prev, metadata]);
           });
         });
@@ -74,17 +101,25 @@ const UploaderPage = (props) => {
         // Uh-oh, an error occurred!
       });
   };
+
   const clickDownload = (itemRef) => {
-    getDownloadURL(ref(storage, itemRef.fullPath)).then((url) => {
-      console.log("URL:", url);
-      const xhr = new XMLHttpRequest();
-      xhr.responseType = "blob";
-      xhr.onload = (event) => {
-        const blob = xhr.response;
-      };
-      xhr.open("GET", url);
-      xhr.send();
-    });
+    getDownloadURL(ref(storage, itemRef.fullPath))
+      .then((url) => {
+        setDownloadUrl(url);
+        // console.log("URL:", url);
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "blob";
+        xhr.onload = (event) => {
+          const blob = xhr.response;
+          FileSaver.saveAs(blob, itemRef.name);
+        };
+        xhr.open("GET", url);
+        xhr.send();
+      })
+      .catch((error) => {
+        // Handle any errors
+        console.log("ERR:", error);
+      });
   };
   const handleCLick = (e, itemRef) => {
     e.preventDefault();
@@ -161,16 +196,36 @@ const UploaderPage = (props) => {
                       backgroundColor: "transparent",
                     }}
                   />
-                  <h1>Click to upload new file</h1>
+                  <h1>Click to select file</h1>
                   <input
                     type="file"
                     id="file"
                     ref={inputFileref}
                     style={{ display: "none" }}
-                    onChange={(e) => setFileUpload(e.target.files[0])}
+                    onChange={(e) => {
+                      setFileUpload(e.target.files[0]);
+                    }}
                   />
                 </button>
-                <UplSubmitBtn onClick={uploadFile}>UPLOAD</UplSubmitBtn>
+                <div>
+                  <UplSubmitBtn onClick={uploadFile}>
+                    Click to upload
+                  </UplSubmitBtn>
+
+                  {showSpinner && (
+                    <div
+                      class="spinner-border spinner-border-sm "
+                      role="status"
+                      style={{
+                        marginLeft: "5px",
+                        height: "15px",
+                        width: "15px",
+                      }}
+                    >
+                      <span class="sr-only"></span>
+                    </div>
+                  )}
+                </div>
               </TabPanel>
               <TabPanel
                 value="2"
@@ -178,28 +233,49 @@ const UploaderPage = (props) => {
                   display: "flex",
                   flexDirection: "column",
                   minHeight: "400px",
-                  marginTop: "5px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
                 <FilesList>
-                  {storageItems &&
-                    storageItems.map((item) => (
-                      <ListItem
-                        key={item.fullPath}
-                        data={item}
-                        onClick={(e) => handleCLick(e, item)}
-                      />
-                    ))}
+                  {storageItems && showAllStorage
+                    ? storageItems.map((item) => (
+                        <ListItem
+                          key={item.fullPath}
+                          data={item}
+                          downloadUlr={downloadUrl}
+                          onClick={(e) => handleCLick(e, item)}
+                        />
+                      ))
+                    : storageItems
+                        .slice(0, 4)
+                        .map((item) => (
+                          <ListItem
+                            key={item.fullPath}
+                            data={item}
+                            downloadUlr={downloadUrl}
+                            onClick={(e) => handleCLick(e, item)}
+                          />
+                        ))}
                 </FilesList>
 
                 <Bottom>
-                  <button onClick={listStorageItems}>View All</button>
+                  <button onClick={() => setShowAllStorage(true)}>
+                    View All
+                  </button>
                 </Bottom>
               </TabPanel>
             </TabContext>
           </Box>
+          <Snackbar open={open} autoHideDuration={2500} onClose={handleClose}>
+            <Alert
+              onClose={handleClose}
+              severity="success"
+              sx={{ width: "100%" }}
+            >
+              File Uploaded!
+            </Alert>
+          </Snackbar>
         </Container>
       )}
     </>
@@ -217,7 +293,6 @@ const Container = styled.div`
   background-color: rgba(255, 255, 255, 1);
   max-height: 550px;
   min-height: 400px;
-
   width: 500px;
   position: fixed;
   bottom: 0;
@@ -234,7 +309,7 @@ const Container = styled.div`
   justify-content: space-between;
 `;
 const Bottom = styled.div`
-  position: relative;
+  position: fixed;
   bottom: 0;
   display: flex;
   align-items: center;
@@ -269,9 +344,13 @@ const UplSubmitBtn = styled.button`
   }
 `;
 const FilesList = styled.li`
+  height: fit-content;
   display: flex;
   flex-direction: column;
   width: 100%;
   list-style-type: none;
   row-gap: 15px;
+  overflow-y: auto;
+  max-height: 350px;
+  margin-bottom: 15px;
 `;
