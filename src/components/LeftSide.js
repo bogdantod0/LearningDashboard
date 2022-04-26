@@ -7,7 +7,7 @@ import UploaderPage from "./Uploader/UploaderPage";
 
 function LeftSide(props) {
   const [showMessages, setShowMessages] = useState(false);
-  const [showUploaderPage, setShowUploaderPage] = useState(true);
+  const [showUploaderPage, setShowUploaderPage] = useState(false);
   const handleShowMessages = (e) => {
     e.preventDefault();
     if (e.target !== e.currentTarget) {

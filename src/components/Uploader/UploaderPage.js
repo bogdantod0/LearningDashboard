@@ -307,6 +307,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  @media (max-width: 760px) {
+    width: 100%;
+  }
 `;
 const Bottom = styled.div`
   position: fixed;
