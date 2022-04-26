@@ -1,9 +1,7 @@
-import { Button } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import IconButton from "@mui/material/IconButton";
-import LongMenu from "./DotMenu";
+import axios from "axios";
+
 import {
   BarChart,
   CartesianGrid,
@@ -15,56 +13,51 @@ import {
   ResponsiveContainer,
 } from "recharts";
 function RightSide(props) {
-  const chartData = [
+  const chrtData = [
     {
       name: "Mo",
       views: 6000,
     },
     {
-      name: "Tw",
-      views: 3000,
+      name: "2o",
+      views: 6000,
     },
     {
-      name: "Wed",
-      views: 2500,
+      name: "3o",
+      views: 6000,
     },
-    {
-      name: "Th",
-      views: 1890,
-    },
-    {
-      name: "Fri",
-      views: 2500,
-    },
-    {
-      name: "Sat",
-      views: 4000,
-    },
+
     {
       name: "Sun",
       views: 7800,
     },
   ];
+  const [chartData, setChartData] = useState([]);
+  const options = {
+    method: "GET",
+    url: "https://coinranking1.p.rapidapi.com/coin/Qwsogvtv82FCd/history",
+    params: { referenceCurrencyUuid: "yhjMzLPhuIDl", timePeriod: "7d" },
+    headers: {
+      "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
+      "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
+    },
+  };
+
+  useEffect(() => {
+    axios
+      .request(options)
+      .then(function(response) {
+        console.log("CHART:", response.data);
+        setChartData(response.data.data.history);
+        console.log("CHART2:", chartData);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <Container>
-      {/* <UserHeader>
-        <IconButton aria-label="Notification">
-          <NotificationsNoneOutlinedIcon />
-        </IconButton>
-
-        <UserMenu>
-          <UserMenuAvatar />
-          <div>
-            <h1>UserName</h1>
-            <h6>User Plan</h6>
-          </div>
-          <UserMenuButton>
-            <LongMenu />
-          </UserMenuButton>
-        </UserMenu>
-      </UserHeader> */}
-
       <SharedStatistics>
         <h1>Statistics</h1>
         <SharedStatisticsCardContainer>
@@ -98,6 +91,7 @@ function RightSide(props) {
           </SharedStatisticsCard>
         </SharedStatisticsCardContainer>
       </SharedStatistics>
+      {/* //////////////////////////////////////////// */}
       <SharedActivity>
         <SharedACtivityHeader>
           <h1>Activity</h1>
@@ -110,15 +104,15 @@ function RightSide(props) {
             margin={{ top: 0, right: 0, left: 0, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="1 1" />
-            <XAxis dataKey="name" />
+            <XAxis interval={50} />
             <YAxis />
             <Tooltip />
 
             <Bar
-              dataKey="views"
+              dataKey="price"
               fill="#369FFF"
               radius={[25, 25, 25, 25]}
-              barSize={25}
+              barSize={10}
             />
           </BarChart>
         </SharedActivityContent>

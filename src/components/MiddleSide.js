@@ -1,22 +1,45 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
-
+import axios from "axios";
+import ItemCard from "./MiddleComponents/ItemCard";
+import PlanItemCard from "./MiddleComponents/PlanItemCard";
 function MiddleSide(props) {
+  const axios = require("axios").default;
   const [value, setValue] = useState(new Date());
   const [courseSearchValue, setCourseSearchValue] = useState("");
+  const [itemCardData, setItemCardData] = useState([]);
+  const [popItemCardData, setPopItemCardData] = useState([]);
+  ////AXIOS OPTIONS
+  const options = {
+    method: "GET",
+    url: "https://opensea-data-query.p.rapidapi.com/api/v1/assets",
+    params: { order_direction: "asc", limit: "8" },
+    headers: {
+      "X-RapidAPI-Host": "opensea-data-query.p.rapidapi.com",
+      "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
+    },
+  };
+
+  ////
+  useEffect(() => {
+    axios
+      .request(options)
+      .then(function(response) {
+        console.log(response.data);
+        setItemCardData(response.data.assets);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  }, []);
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Container>
-        {/* <Header>
-          <span>
-            Hello <b>USER</b>, welcome back!
-          </span>
-        </Header> */}
         <TopContent>
           <TopContentHeader>
             <div>
@@ -36,49 +59,10 @@ function MiddleSide(props) {
           </TopContentHeader>
 
           <CardContainer>
-            <Card>
-              <Background />
-              <Info>
-                <h1>Title Card</h1>
-                <h2>Subtitle card</h2>
-              </Info>
-              <Logo>
-                <img src="/images/cards/icon/Frame.svg" alt="" />
-              </Logo>
-            </Card>
-
-            <Card>
-              <Info>
-                <h1>Title Card</h1>
-                <h2>Subtitle card</h2>
-              </Info>
-              <Logo>
-                <img src="/images/cards/icon/Frame2.svg" alt="" />
-              </Logo>
-              <Background />
-            </Card>
-
-            <Card>
-              <Background />
-              <Info>
-                <h1>Title Card</h1>
-                <h2>Subtitle card</h2>
-              </Info>
-              <Logo>
-                <img src="/images/cards/icon/Frame.svg" alt="" />
-              </Logo>
-            </Card>
-
-            <Card>
-              <Background />
-              <Info>
-                <h1>Title Card</h1>
-                <h2>Subtitle card</h2>
-              </Info>
-              <Logo>
-                <img src="/images/cards/icon/Frame.svg" alt="" />
-              </Logo>
-            </Card>
+            {itemCardData &&
+              itemCardData.map((item) => (
+                <ItemCard key={item.name} data={item} />
+              ))}
           </CardContainer>
         </TopContent>
         <BottomContent>
@@ -108,48 +92,7 @@ function MiddleSide(props) {
               </span>
               <Button>...</Button>
             </PlanCard>
-            <PlanCard>
-              <PlanCardIcon />
-              <span>
-                <h1>PlanCard Title</h1>
-                <h2>Plan Card Subtitle</h2>
-              </span>
-              <Button>...</Button>
-            </PlanCard>
-            <PlanCard>
-              <PlanCardIcon />
-              <span>
-                <h1>PlanCard Title</h1>
-                <h2>Plan Card Subtitle</h2>
-              </span>
-              <Button>...</Button>
-            </PlanCard>
-            <PlanCard>
-              <PlanCardIcon />
-              <span>
-                <h1>PlanCard Title</h1>
-                <h2>Plan Card Subtitle</h2>
-              </span>
-              <Button>...</Button>
-            </PlanCard>
-            <PlanCard>
-              <PlanCardIcon />
-              <span>
-                <h1>PlanCard Title</h1>
-                <h2>Plan Card Subtitle</h2>
-              </span>
-              <Button>...</Button>
-            </PlanCard>
-            <PlanCard>
-              <PlanCardIcon />
-
-              <span>
-                <h1>PlanCard Title</h1>
-                <h2>Plan Card Subtitle</h2>
-              </span>
-
-              <Button>...</Button>
-            </PlanCard>
+            <PlanItemCard />
           </BottomCardCotainer>
         </BottomContent>
       </Container>

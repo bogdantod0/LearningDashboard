@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -17,7 +17,6 @@ import {
   signInAPI,
   signInGoogleApi,
   signInFacebookApi,
-  resetPassword,
 } from "../Redux/actions";
 import { connect } from "react-redux";
 import { Routes, Route, Navigate } from "react-router-dom";

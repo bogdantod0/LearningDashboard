@@ -47,7 +47,8 @@ const MessagePage = (props) => {
     <>
       {props.showMessagePage && (
         <Container>
-          <div className="TopButton">
+          <div className="Top">
+            <ChatTitle>Messages</ChatTitle>
             <button
               onClick={(e) => {
                 props.handleClick(e);
@@ -58,7 +59,6 @@ const MessagePage = (props) => {
             </button>
           </div>
 
-          <ChatTitle>Messages</ChatTitle>
           <Channel>
             <TopChat>
               {messages &&
@@ -124,7 +124,10 @@ const Container = styled.div`
   -webkit-box-shadow: -1px 3px 21px 1px rgba(0, 0, 0, 0.25);
   -moz-box-shadow: -1px 3px 21px 1px rgba(0, 0, 0, 0.25);
   min-height: 400px;
-
+  .Top {
+    display: flex;
+    justify-content: space-between;
+  }
   button {
     background-color: transparent;
     border: none;

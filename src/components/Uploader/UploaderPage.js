@@ -12,6 +12,7 @@ import {
   getBytes,
 } from "firebase/storage";
 import { connect } from "react-redux";
+import { FileUploader } from "react-drag-drop-files";
 ///IMPORTS///
 import Box from "@mui/material/Box";
 import Tab from "@mui/material/Tab";
@@ -36,7 +37,7 @@ const UploaderPage = (props) => {
   const [showAllStorage, setShowAllStorage] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState(null);
   const [showSpinner, setShowSpinner] = useState(false);
-
+  const fileTypes = ["JPG", "PNG", "GIF", "PDF"];
   ///
   const [open, setOpen] = useState(false);
 
@@ -54,6 +55,11 @@ const UploaderPage = (props) => {
   });
   ////
   var FileSaver = require("file-saver");
+
+  const dropHandleChange = (file) => {
+    setFileUpload(file);
+  };
+
   useEffect(() => {
     listStorageItems();
   }, []);
@@ -171,13 +177,13 @@ const UploaderPage = (props) => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  minHeight: "400px",
+                  minHeight: "300px",
                   marginTop: "5px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
               >
-                <button
+                {/* <button
                   style={{
                     color: "gray",
                     backgroundColor: "transparent",
@@ -189,8 +195,8 @@ const UploaderPage = (props) => {
                 >
                   <UploadFileIcon
                     sx={{
-                      height: "100%",
-                      width: "100%",
+                      height: "75%",
+                      width: "75%",
                       minHeight: "50px",
                       minWidth: "50px",
                       backgroundColor: "transparent",
@@ -206,7 +212,18 @@ const UploaderPage = (props) => {
                       setFileUpload(e.target.files[0]);
                     }}
                   />
-                </button>
+                </button> */}
+                <FileUploader
+                  multiple={false}
+                  handleChange={dropHandleChange}
+                  name="file"
+                  label={"Select or drop file here"}
+                />
+                <p>
+                  {fileUpload
+                    ? `File to upload: ${fileUpload.name}`
+                    : "No files selected"}
+                </p>
                 <div>
                   <UplSubmitBtn onClick={uploadFile}>
                     Click to upload
@@ -232,7 +249,8 @@ const UploaderPage = (props) => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  minHeight: "400px",
+                  minHeight: "200px",
+                  maxHeight: "370px",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
@@ -309,6 +327,9 @@ const Container = styled.div`
   justify-content: space-between;
   @media (max-width: 760px) {
     width: 100%;
+    top: 0;
+    right: 0;
+    height: 400px;
   }
 `;
 const Bottom = styled.div`
@@ -326,17 +347,14 @@ const Bottom = styled.div`
     font-size: 16px;
     font-weight: 600;
   }
+  @media (max-width: 760px) {
+    position: relative;
+    button {
+      border-radius: 25px;
+    }
+  }
 `;
-const Content = styled.div`
-  background-color: antiquewhite;
-  height: 100%;
-  display: flex;
-  flex-wrap: wrap;
-`;
-const UplFile = styled.input`
-  height: 200px;
-  width: 200px;
-`;
+
 const UplSubmitBtn = styled.button`
   margin-top: 5px;
   background-color: transparent;
@@ -356,4 +374,9 @@ const FilesList = styled.li`
   overflow-y: auto;
   max-height: 350px;
   margin-bottom: 15px;
+  @media (max-width: 760px) {
+    position: relative;
+    height: fit-content;
+    overflow-y: auto;
+  }
 `;

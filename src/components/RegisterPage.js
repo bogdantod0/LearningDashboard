@@ -1,4 +1,3 @@
-import { Dialpad } from "@mui/icons-material";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { registerUser } from "../Redux/actions";
