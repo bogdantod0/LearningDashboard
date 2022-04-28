@@ -15,18 +15,26 @@ function MiddleSide(props) {
   const [itemCardData, setItemCardData] = useState([]);
   const [popItemCardData, setPopItemCardData] = useState([]);
   ////AXIOS OPTIONS
-  const options = {
-    method: "GET",
-    url: "https://opensea-data-query.p.rapidapi.com/api/v1/assets",
-    params: { limit: "8" },
-    headers: {
-      "X-RapidAPI-Host": "opensea-data-query.p.rapidapi.com",
-      "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
-    },
-  };
 
   ////
   useEffect(() => {
+    getItemCardData();
+    getPopItemData();
+  }, []);
+
+  const getItemCardData = () => {
+    const options = {
+      method: "GET",
+      url: "https://opensea-data-query.p.rapidapi.com/api/v1/assets",
+      params: {
+        collection_slug: "bored-apes-by-famous-artists-official",
+        limit: "10",
+      },
+      headers: {
+        "X-RapidAPI-Host": "opensea-data-query.p.rapidapi.com",
+        "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
+      },
+    };
     axios
       .request(options)
       .then(function(response) {
@@ -36,14 +44,35 @@ function MiddleSide(props) {
       .catch(function(error) {
         console.error(error);
       });
-  }, []);
+  };
+
+  const getPopItemData = () => {
+    const options = {
+      method: "GET",
+      url: "https://opensea-data-query.p.rapidapi.com/api/v1/assets",
+      params: { limit: "10" },
+      headers: {
+        "X-RapidAPI-Host": "opensea-data-query.p.rapidapi.com",
+        "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
+      },
+    };
+    axios
+      .request(options)
+      .then(function(response) {
+        // console.log(response.data);
+        setPopItemCardData(response.data.assets);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  };
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Container>
         <TopContent>
           <TopContentHeader>
             <div>
-              <h1>MyCourses</h1>
+              <h1>Collections</h1>
               <span>View All</span>
             </div>
 
@@ -68,7 +97,7 @@ function MiddleSide(props) {
         <BottomContent>
           <BottomHeader>
             <div>
-              <h1>Planning</h1>
+              <h1>Random NFT</h1>
               <a>View All</a>
             </div>
 
@@ -84,15 +113,10 @@ function MiddleSide(props) {
             />
           </BottomHeader>
           <BottomCardCotainer>
-            <PlanCard>
-              <PlanCardIcon />
-              <span>
-                <h1>PlanCard Title</h1>
-                <h2>Plan Card Subtitle</h2>
-              </span>
-              <Button>...</Button>
-            </PlanCard>
-            <PlanItemCard />
+            {popItemCardData &&
+              popItemCardData.map((item) => (
+                <PlanItemCard data={item} key={item.name} />
+              ))}
           </BottomCardCotainer>
         </BottomContent>
       </Container>
