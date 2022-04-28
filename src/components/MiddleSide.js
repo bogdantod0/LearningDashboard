@@ -18,7 +18,7 @@ function MiddleSide(props) {
   const options = {
     method: "GET",
     url: "https://opensea-data-query.p.rapidapi.com/api/v1/assets",
-    params: { order_direction: "asc", limit: "8" },
+    params: { limit: "8" },
     headers: {
       "X-RapidAPI-Host": "opensea-data-query.p.rapidapi.com",
       "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",

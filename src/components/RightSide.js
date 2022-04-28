@@ -36,7 +36,7 @@ function RightSide(props) {
   const options = {
     method: "GET",
     url: "https://coinranking1.p.rapidapi.com/coin/Qwsogvtv82FCd/history",
-    params: { referenceCurrencyUuid: "yhjMzLPhuIDl", timePeriod: "7d" },
+    params: { referenceCurrencyUuid: "yhjMzLPhuIDl", timePeriod: "24h" },
     headers: {
       "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
       "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
@@ -48,7 +48,15 @@ function RightSide(props) {
       .request(options)
       .then(function(response) {
         console.log("CHART:", response.data);
-        setChartData(response.data.data.history);
+        const resp = response.data.data.history;
+        resp.forEach((element) => {
+          element.timestamp = new Date(
+            element.timestamp * 1000
+          ).toLocaleTimeString("en-US");
+        });
+
+        console.log("RESP:", resp);
+        setChartData(resp);
         console.log("CHART2:", chartData);
       })
       .catch(function(error) {
@@ -98,14 +106,14 @@ function RightSide(props) {
         </SharedACtivityHeader>
         <SharedActivityContent>
           <BarChart
-            width={400}
+            width={380}
             height={300}
             data={chartData}
             margin={{ top: 0, right: 0, left: 0, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="1 1" />
-            <XAxis interval={50} />
-            <YAxis />
+            <XAxis dataKey="timestamp" interval="preserveStartEnd" />
+            <YAxis domain={["auto", "auto"]} />
             <Tooltip />
 
             <Bar
