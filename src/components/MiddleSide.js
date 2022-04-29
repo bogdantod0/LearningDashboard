@@ -10,29 +10,46 @@ import ItemCard from "./MiddleComponents/ItemCard";
 import PlanItemCard from "./MiddleComponents/PlanItemCard";
 function MiddleSide(props) {
   const axios = require("axios").default;
-  const [value, setValue] = useState(new Date());
-  const [courseSearchValue, setCourseSearchValue] = useState("");
+  const [dateValue, setDateValue] = useState(new Date());
   const [itemCardData, setItemCardData] = useState([]);
   const [popItemCardData, setPopItemCardData] = useState([]);
+  const [collectionSearchValue, setCollectionSearchValue] = useState(
+    "bored-apes-by-famous-artists-official"
+  );
+  const [limit, setLimit] = useState(10);
   ////AXIOS OPTIONS
 
   ////
   useEffect(() => {
-    getItemCardData();
+    getItemCardData("bored-apes-by-famous-artists-official", limit);
     getPopItemData();
   }, []);
 
-  const getItemCardData = () => {
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setCollectionSearchValue(e.target.value);
+    setItemCardData([]);
+    getItemCardData(e.target.value, limit);
+    console.log("SEARCH:", collectionSearchValue);
+  };
+  const handleLimit = (e) => {
+    setLimit(20);
+    getItemCardData(collectionSearchValue, 20);
+    // setItemCardData([]);
+  };
+  const getItemCardData = (search, limit) => {
     const options = {
       method: "GET",
       url: "https://opensea-data-query.p.rapidapi.com/api/v1/assets",
       params: {
-        collection_slug: "bored-apes-by-famous-artists-official",
-        limit: "10",
+        // collection_slug: "bored-apes-by-famous-artists-official",
+        // limit: "10",
+        collection_slug: search,
+        limit: limit,
       },
       headers: {
         "X-RapidAPI-Host": "opensea-data-query.p.rapidapi.com",
-        "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
+        "X-RapidAPI-Key": "e66bc3e1fcmsh60c77263fae2954p151943jsn5fda1677bfa2",
       },
     };
     axios
@@ -53,7 +70,7 @@ function MiddleSide(props) {
       params: { limit: "10" },
       headers: {
         "X-RapidAPI-Host": "opensea-data-query.p.rapidapi.com",
-        "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
+        "X-RapidAPI-Key": "e66bc3e1fcmsh60c77263fae2954p151943jsn5fda1677bfa2",
       },
     };
     axios
@@ -73,7 +90,17 @@ function MiddleSide(props) {
           <TopContentHeader>
             <div>
               <h1>Collections</h1>
-              <span>View All</span>
+              <button
+                onClick={(e) => handleLimit(e)}
+                style={{
+                  border: "none",
+
+                  backgroundColor: "transparent",
+                  color: "rgba(54, 159, 255, 1)",
+                }}
+              >
+                View All
+              </button>
             </div>
 
             <div>
@@ -83,6 +110,7 @@ function MiddleSide(props) {
                 label="Search"
                 type="search"
                 variant="standard"
+                onChange={(e) => handleSearch(e)}
               />
             </div>
           </TopContentHeader>
@@ -105,9 +133,9 @@ function MiddleSide(props) {
               label="Date"
               openTo="year"
               views={["year", "month", "day"]}
-              value={value}
+              value={dateValue}
               onChange={(newValue) => {
-                setValue(newValue);
+                setDateValue(newValue);
               }}
               renderInput={(params) => <TextField {...params} />}
             />

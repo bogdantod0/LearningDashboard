@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-
+import SharedStatisticsCard from "./RightComponent/SharedStatisticsCard";
 import {
   BarChart,
   CartesianGrid,
@@ -13,55 +13,79 @@ import {
   ResponsiveContainer,
 } from "recharts";
 function RightSide(props) {
-  const chrtData = [
-    {
-      name: "Mo",
-      views: 6000,
-    },
-    {
-      name: "2o",
-      views: 6000,
-    },
-    {
-      name: "3o",
-      views: 6000,
-    },
-
-    {
-      name: "Sun",
-      views: 7800,
-    },
-  ];
   const [chartData, setChartData] = useState([]);
-  const options = {
-    method: "GET",
-    url: "https://coinranking1.p.rapidapi.com/coin/Qwsogvtv82FCd/history",
-    params: { referenceCurrencyUuid: "yhjMzLPhuIDl", timePeriod: "24h" },
-    headers: {
-      "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
-      "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
-    },
-  };
+  const [topCoins, setTopCoins] = useState(null);
 
-  useEffect(() => {
+  const getBitcointPrice = () => {
+    const options = {
+      method: "GET",
+      url: "https://coinranking1.p.rapidapi.com/coin/Qwsogvtv82FCd/history",
+      params: { referenceCurrencyUuid: "yhjMzLPhuIDl", timePeriod: "24h" },
+      headers: {
+        "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
+        "X-RapidAPI-Key": "43c9555146msh7dd4385cbd2445dp120095jsn8d879ac137bc",
+      },
+    };
     axios
       .request(options)
       .then(function(response) {
-        console.log("CHART:", response.data);
+        // console.log("CHART:", response.data);
         const resp = response.data.data.history;
-        resp.forEach((element) => {
+        const resp2 = resp.filter((element) => element.price !== null);
+        resp2.forEach((element) => {
           element.timestamp = new Date(
             element.timestamp * 1000
           ).toLocaleTimeString("en-US");
+          element.price = Math.round(element.price).toFixed(4);
         });
 
         console.log("RESP:", resp);
-        setChartData(resp);
+        setChartData(resp2);
         console.log("CHART2:", chartData);
       })
       .catch(function(error) {
         console.error(error);
       });
+  };
+  const topCoinPriceRequest = () => {
+    const axios = require("axios");
+
+    const options = {
+      method: "GET",
+      url: "https://coinranking1.p.rapidapi.com/coins",
+      params: {
+        referenceCurrencyUuid: "yhjMzLPhuIDl",
+        timePeriod: "24h",
+        "tiers[0]": "1",
+        orderBy: "price",
+        orderDirection: "desc",
+        limit: "6",
+        offset: "0",
+      },
+      headers: {
+        "X-RapidAPI-Host": "coinranking1.p.rapidapi.com",
+        "X-RapidAPI-Key": "e66bc3e1fcmsh60c77263fae2954p151943jsn5fda1677bfa2",
+      },
+    };
+
+    axios
+      .request(options)
+      .then(function(response) {
+        // console.log(response.data);
+        const resp = response.data.data.coins;
+        resp.forEach(
+          (element) =>
+            (element.price = (Math.round(element.price * 100) / 100).toFixed(4))
+        );
+        setTopCoins(resp);
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+  };
+  useEffect(() => {
+    topCoinPriceRequest();
+    getBitcointPrice();
   }, []);
 
   return (
@@ -69,34 +93,10 @@ function RightSide(props) {
       <SharedStatistics>
         <h1>Statistics</h1>
         <SharedStatisticsCardContainer>
-          <SharedStatisticsCard>
-            <h2>Card Title </h2>
-            <div>
-              <h1>|</h1>
-              <h1>50</h1>
-            </div>
-          </SharedStatisticsCard>
-          <SharedStatisticsCard>
-            <h2>Card Title</h2>
-            <div>
-              <h1>|</h1>
-              <h1>50</h1>
-            </div>
-          </SharedStatisticsCard>
-          <SharedStatisticsCard>
-            <h2>Card Title</h2>
-            <div>
-              <h1>|</h1>
-              <h1>50</h1>
-            </div>
-          </SharedStatisticsCard>
-          <SharedStatisticsCard>
-            <h2>Card Title</h2>
-            <div>
-              <h1>|</h1>
-              <h1>50</h1>
-            </div>
-          </SharedStatisticsCard>
+          {topCoins &&
+            topCoins.map((item) => (
+              <SharedStatisticsCard data={item} key={item.uuid} />
+            ))}
         </SharedStatisticsCardContainer>
       </SharedStatistics>
       {/* //////////////////////////////////////////// */}
@@ -177,27 +177,27 @@ const UserMenuAvatar = styled.div`
 `;
 const UserMenuButton = styled.div``;
 
-const SharedStatisticsCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  background-color: rgba(54, 159, 255, 0.3);
-  padding: 30px;
-  border-radius: 20px;
-  min-height: 150px;
-  min-width: 150px;
-  h2 {
-    color: rgba(0, 0, 0, 0.3);
-    max-width: fit-content;
-  }
-  div {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    color: #006ed3;
-    font-size: 30px;
-  }
-`;
+// const SharedStatisticsCard = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-around;
+//   background-color: rgba(54, 159, 255, 0.3);
+//   padding: 30px;
+//   border-radius: 20px;
+//   min-height: 150px;
+//   min-width: 150px;
+//   h2 {
+//     color: rgba(0, 0, 0, 0.3);
+//     max-width: fit-content;
+//   }
+//   div {
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     color: #006ed3;
+//     font-size: 30px;
+//   }
+// `;
 const SharedStatisticsCardContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
